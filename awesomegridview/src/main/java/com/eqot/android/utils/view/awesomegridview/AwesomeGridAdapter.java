@@ -1,6 +1,5 @@
 package com.eqot.android.utils.view.awesomegridview;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -18,8 +17,8 @@ import java.util.ArrayList;
 
 public class AwesomeGridAdapter extends RecyclerView.Adapter<AwesomeGridAdapter.ViewHolder> {
     private static final String TAG = "AwesomeGridAdapter";
+
     private ArrayList<Object> mDataset;
-    private Resources mResource;
     private View mView;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -37,8 +36,6 @@ public class AwesomeGridAdapter extends RecyclerView.Adapter<AwesomeGridAdapter.
     public AwesomeGridAdapter(ArrayList<Object> dataset, View view) {
         mDataset = dataset;
         mView = view;
-
-        mResource = mView.getResources();
     }
 
     @Override
@@ -54,23 +51,13 @@ public class AwesomeGridAdapter extends RecyclerView.Adapter<AwesomeGridAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (mDataset.get(0) instanceof Integer) {
-            Bitmap bitmap = BitmapFactory.decodeResource(mResource, (Integer) mDataset.get(position));
+            Bitmap bitmap = BitmapFactory.decodeResource(
+                    mView.getResources(), (Integer) mDataset.get(position));
             holder.mImageView.setImageBitmap(bitmap);
         } else if (mDataset.get(0) instanceof String) {
             holder.mTextView.setText(mDataset.get(position).toString());
         } else {
-            String data = ((Media) mDataset.get(position)).mData;
-//            Log.d(TAG, data);
-//            holder.mTextView.setText(((Media) mDataset.get(position)).mData);
-
             Uri uri = ((Media) mDataset.get(position)).mUri;
-//            Log.d(TAG, uri.toString());
-
-//                InputStream inputStream = mView.getContext().getContentResolver()
-//                        .openInputStream(uri);
-//                final BitmapFactory.Options options = new BitmapFactory.Options();
-//                options.inSampleSize = 4;
-//                Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, options);
 
             Bitmap bitmap = SmartImageLoader.decodeUri(
                     mView.getContext().getContentResolver(), uri, 128, 128);

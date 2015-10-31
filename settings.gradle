@@ -1,1 +1,1 @@
-include ':app', ':awesomegridview'
+include ':app', ':awesomegridview', ':medialist'

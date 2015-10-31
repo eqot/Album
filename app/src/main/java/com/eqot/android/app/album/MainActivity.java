@@ -8,12 +8,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.eqot.android.utils.image.medialist.MediaList;
 import com.eqot.android.utils.view.awesomegridview.AwesomeGridView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     private ArrayList<Object> mDatasetImage;
     private ArrayList<Object> mDatasetText;
 
@@ -42,17 +45,20 @@ public class MainActivity extends AppCompatActivity {
     private void execute() {
         mGridView = (AwesomeGridView) findViewById(R.id.grid_view);
 
-        mDatasetImage = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            mDatasetImage.add(R.drawable.ic_launcher);
-        }
-        mGridView.setDataset(mDatasetImage);
+//        mDatasetImage = new ArrayList<>();
+//        for (int i = 0; i < 100; i++) {
+//            mDatasetImage.add(R.drawable.ic_launcher);
+//        }
+//        mGridView.setDataset(mDatasetImage);
 
+        MediaList mediaList = new MediaList(this);
+        mDatasetText = mediaList.load();
 //        mDatasetText = new ArrayList<>();
 //        for (int i = 0; i < 100; i++) {
 //            mDatasetText.add("" + i);
 //        }
-//        gridView.setDataset(mDatasetText);
+        mGridView.setDataset(mDatasetText);
+
     }
 
     @Override

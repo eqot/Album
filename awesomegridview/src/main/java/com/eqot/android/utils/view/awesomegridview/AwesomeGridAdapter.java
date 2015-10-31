@@ -3,18 +3,26 @@ package com.eqot.android.utils.view.awesomegridview;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.eqot.android.utils.image.medialist.Media;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class AwesomeGridAdapter extends RecyclerView.Adapter<AwesomeGridAdapter.ViewHolder> {
+    private static final String TAG = "AwesomeGridAdapter";
     private ArrayList<Object> mDataset;
     private Resources mResource;
+    private View mView;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView mImageView;
@@ -28,9 +36,11 @@ public class AwesomeGridAdapter extends RecyclerView.Adapter<AwesomeGridAdapter.
         }
     }
 
-    public AwesomeGridAdapter(ArrayList<Object> dataset, Resources res) {
+    public AwesomeGridAdapter(ArrayList<Object> dataset, View view) {
         mDataset = dataset;
-        mResource = res;
+        mView = view;
+
+        mResource = mView.getResources();
     }
 
     @Override
@@ -50,6 +60,21 @@ public class AwesomeGridAdapter extends RecyclerView.Adapter<AwesomeGridAdapter.
             holder.mImageView.setImageBitmap(bitmap);
         } else if (mDataset.get(0) instanceof String) {
             holder.mTextView.setText(mDataset.get(position).toString());
+        } else {
+            String data = ((Media) mDataset.get(position)).mData;
+//            Log.d(TAG, data);
+//            holder.mTextView.setText(((Media) mDataset.get(position)).mData);
+
+            Uri uri = ((Media) mDataset.get(position)).mUri;
+            Log.d(TAG, uri.toString());
+
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(
+                        mView.getContext().getContentResolver(), uri);
+                holder.mImageView.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

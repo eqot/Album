@@ -40,7 +40,7 @@ public class AwesomeGridView extends LinearLayout {
     }
 
     public void setDataset(ArrayList<Object> dataset) {
-        mAdapter = new AwesomeGridAdapter(dataset, getResources());
+        mAdapter = new AwesomeGridAdapter(dataset, this);
         mRecyclerView.setAdapter(mAdapter);
     }
 

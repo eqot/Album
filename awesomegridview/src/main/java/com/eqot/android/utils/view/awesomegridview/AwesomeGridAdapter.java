@@ -4,7 +4,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +14,8 @@ import android.widget.TextView;
 
 import com.eqot.android.utils.image.medialist.Media;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class AwesomeGridAdapter extends RecyclerView.Adapter<AwesomeGridAdapter.ViewHolder> {
@@ -69,10 +69,13 @@ public class AwesomeGridAdapter extends RecyclerView.Adapter<AwesomeGridAdapter.
             Log.d(TAG, uri.toString());
 
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(
-                        mView.getContext().getContentResolver(), uri);
+                InputStream inputStream = mView.getContext().getContentResolver()
+                        .openInputStream(uri);
+                final BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 4;
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, options);
                 holder.mImageView.setImageBitmap(bitmap);
-            } catch (IOException e) {
+            } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }

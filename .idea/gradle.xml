@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/awesomegridview" />
             <option value="$PROJECT_DIR$/medialist" />
+            <option value="$PROJECT_DIR$/smartimage" />
           </set>
         </option>
       </GradleProjectSettings>

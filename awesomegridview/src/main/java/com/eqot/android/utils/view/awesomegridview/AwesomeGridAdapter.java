@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.eqot.android.utils.image.medialist.Media;
+import com.eqot.android.utils.image.smartimage.SmartImageLoader;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 public class AwesomeGridAdapter extends RecyclerView.Adapter<AwesomeGridAdapter.ViewHolder> {
@@ -66,18 +64,17 @@ public class AwesomeGridAdapter extends RecyclerView.Adapter<AwesomeGridAdapter.
 //            holder.mTextView.setText(((Media) mDataset.get(position)).mData);
 
             Uri uri = ((Media) mDataset.get(position)).mUri;
-            Log.d(TAG, uri.toString());
+//            Log.d(TAG, uri.toString());
 
-            try {
-                InputStream inputStream = mView.getContext().getContentResolver()
-                        .openInputStream(uri);
-                final BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize = 4;
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, options);
-                holder.mImageView.setImageBitmap(bitmap);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+//                InputStream inputStream = mView.getContext().getContentResolver()
+//                        .openInputStream(uri);
+//                final BitmapFactory.Options options = new BitmapFactory.Options();
+//                options.inSampleSize = 4;
+//                Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, options);
+
+            Bitmap bitmap = SmartImageLoader.decodeUri(
+                    mView.getContext().getContentResolver(), uri, 128, 128);
+            holder.mImageView.setImageBitmap(bitmap);
         }
     }
 

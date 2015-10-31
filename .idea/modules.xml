@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/awesomegridview/awesomegridview.iml" filepath="$PROJECT_DIR$/awesomegridview/awesomegridview.iml" />
       <module fileurl="file://$PROJECT_DIR$/medialist/medialist.iml" filepath="$PROJECT_DIR$/medialist/medialist.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smartimage/smartimage.iml" filepath="$PROJECT_DIR$/smartimage/smartimage.iml" />
     </modules>
   </component>
 </project>

@@ -35,6 +35,8 @@ public class AwesomeGridView extends LinearLayout {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
+
+        mRecyclerView.addOnItemTouchListener(new AwesomeTouchListener(getContext()));
     }
 
     public void setDataset(ArrayList<Object> dataset) {

@@ -12,13 +12,11 @@ import com.eqot.android.utils.image.medialist.MediaList;
 import com.eqot.android.utils.view.awesomegridview.AwesomeGridView;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private ArrayList<Object> mDatasetImage;
-    private ArrayList<Object> mDatasetText;
+    private ArrayList<Object> mDataset;
 
     private AwesomeGridView mGridView;
 
@@ -33,8 +31,6 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
                 mGridView.addSpanCount(1);
             }
         });
@@ -43,22 +39,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void execute() {
-        mGridView = (AwesomeGridView) findViewById(R.id.grid_view);
-
-//        mDatasetImage = new ArrayList<>();
-//        for (int i = 0; i < 100; i++) {
-//            mDatasetImage.add(R.drawable.ic_launcher);
-//        }
-//        mGridView.setDataset(mDatasetImage);
-
         MediaList mediaList = new MediaList(this);
-        mDatasetText = mediaList.load();
-//        mDatasetText = new ArrayList<>();
-//        for (int i = 0; i < 100; i++) {
-//            mDatasetText.add("" + i);
-//        }
-        mGridView.setDataset(mDatasetText);
+        mDataset = mediaList.load();
 
+        mGridView = (AwesomeGridView) findViewById(R.id.grid_view);
+        mGridView.setDataset(mDataset);
     }
 
     @Override

@@ -35,9 +35,6 @@ public class AwesomeGridView extends LinearLayout {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
-
-        mLayoutManager = new GridLayoutManager(getContext(), 3);
-        mRecyclerView.setLayoutManager(mLayoutManager);
     }
 
     public void setDataset(ArrayList<Object> dataset) {

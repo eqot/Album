@@ -13,36 +13,6 @@ import rx.Subscription;
 import rx.schedulers.Schedulers;
 import rx.android.schedulers.AndroidSchedulers;
 
-/*
-public class BitmapWorkerTask extends AsyncTask<Uri, Void, Bitmap> {
-    private final WeakReference<ImageView> mImageViewReference;
-    private final ContentResolver mContentResolver;
-
-    public Uri uri = null;
-
-    public BitmapWorkerTask(ImageView imageView, ContentResolver cr) {
-        mImageViewReference = new WeakReference<ImageView>(imageView);
-        mContentResolver = cr;
-    }
-
-    @Override
-    protected Bitmap doInBackground(Uri... params) {
-        uri = params[0];
-        return SmartImageLoader.decodeUri(mContentResolver, uri, 128, 128);
-    }
-
-    @Override
-    protected void onPostExecute(Bitmap bitmap) {
-        if (mImageViewReference != null && bitmap != null) {
-            final ImageView imageView = mImageViewReference.get();
-            if (imageView != null) {
-                imageView.setImageBitmap(bitmap);
-            }
-        }
-    }
-}
-/**/
-
 public class BitmapWorkerTask {
     private static final String TAG = "BitmapWorkerTask (Rx)";
 
@@ -66,7 +36,7 @@ public class BitmapWorkerTask {
                 .subscribe(this::setBitmap, this::onError);
     }
 
-    public void cancel(boolean flag) {
+    public void cancel() {
         mSubscription.unsubscribe();
     }
 

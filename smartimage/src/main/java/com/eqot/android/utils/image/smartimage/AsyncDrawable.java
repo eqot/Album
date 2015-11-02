@@ -29,7 +29,7 @@ public class AsyncDrawable extends BitmapDrawable {
             final Uri bitmapUri = bitmapWorkerTask.uri;
 
             if (bitmapUri == null || bitmapUri != uri) {
-                bitmapWorkerTask.cancel(true);
+                bitmapWorkerTask.cancel();
             } else {
                 return false;
             }

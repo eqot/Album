@@ -18,6 +18,7 @@ public class BitmapWorkerTask {
 
     private final WeakReference<ImageView> mImageViewReference;
     private final ContentResolver mContentResolver;
+    private static BitmapCache sBitmapCache = null;
 
     public Uri uri = null;
 
@@ -26,6 +27,10 @@ public class BitmapWorkerTask {
     public BitmapWorkerTask(ImageView imageView, ContentResolver cr) {
         mImageViewReference = new WeakReference<>(imageView);
         mContentResolver = cr;
+
+        if (sBitmapCache == null) {
+            sBitmapCache = new BitmapCache(imageView.getContext());
+        }
     }
 
     public void execute(Uri imageUri) {
@@ -45,7 +50,16 @@ public class BitmapWorkerTask {
 
         this.uri = uri;
 
-        return SmartImageLoader.decodeUri(mContentResolver, uri, 128, 128);
+        Bitmap bitmap = sBitmapCache.getBitmap(uri);
+        if (bitmap != null) {
+            return bitmap;
+        }
+
+        bitmap = SmartImageLoader.decodeUri(mContentResolver, uri, 128, 128);
+
+        sBitmapCache.addBitmap(uri, bitmap);
+
+        return bitmap;
     }
 
     public void setBitmap(Bitmap bitmap) {

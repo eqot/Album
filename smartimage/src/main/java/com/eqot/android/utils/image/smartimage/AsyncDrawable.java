@@ -10,16 +10,16 @@ import android.widget.ImageView;
 import java.lang.ref.WeakReference;
 
 public class AsyncDrawable extends BitmapDrawable {
-    private final WeakReference<BitmapWorkerTask> mBitmapWorkerTaskWeakReference;
+    private final WeakReference<BitmapWorkerTask> mBitmapWorkerTaskRef;
 
-    public AsyncDrawable(Resources res, Bitmap bitmap,
-                         BitmapWorkerTask bitmapWorkerTaskWeakReference) {
+    public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
         super(res, bitmap);
-        mBitmapWorkerTaskWeakReference = new WeakReference<>(bitmapWorkerTaskWeakReference);
+
+        mBitmapWorkerTaskRef = new WeakReference<>(bitmapWorkerTask);
     }
 
     public BitmapWorkerTask getBitmapWorkerTask() {
-        return mBitmapWorkerTaskWeakReference.get();
+        return mBitmapWorkerTaskRef.get();
     }
 
     public static boolean cancelPotentialWork(ImageView imageView, Uri uri) {
@@ -42,8 +42,7 @@ public class AsyncDrawable extends BitmapDrawable {
         if (imageView != null) {
             final Drawable drawable = imageView.getDrawable();
             if (drawable instanceof AsyncDrawable) {
-                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
-                return asyncDrawable.getBitmapWorkerTask();
+                return ((AsyncDrawable) drawable).getBitmapWorkerTask();
             }
         }
 

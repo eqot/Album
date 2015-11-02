@@ -3,6 +3,9 @@ package com.eqot.android.utils.image.smartimage;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
 
@@ -12,11 +15,38 @@ public class AsyncDrawable extends BitmapDrawable {
     public AsyncDrawable(Resources res, Bitmap bitmap,
                          BitmapWorkerTask bitmapWorkerTaskWeakReference) {
         super(res, bitmap);
-        mBitmapWorkerTaskWeakReference =
-                new WeakReference<BitmapWorkerTask>(bitmapWorkerTaskWeakReference);
+        mBitmapWorkerTaskWeakReference = new WeakReference<>(bitmapWorkerTaskWeakReference);
     }
 
     public BitmapWorkerTask getBitmapWorkerTask() {
         return mBitmapWorkerTaskWeakReference.get();
+    }
+
+    public static boolean cancelPotentialWork(ImageView imageView, Uri uri) {
+        final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+
+        if (bitmapWorkerTask != null) {
+            final Uri bitmapUri = bitmapWorkerTask.uri;
+
+            if (bitmapUri == null || bitmapUri != uri) {
+                bitmapWorkerTask.cancel(true);
+            } else {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
+        if (imageView != null) {
+            final Drawable drawable = imageView.getDrawable();
+            if (drawable instanceof AsyncDrawable) {
+                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
+                return asyncDrawable.getBitmapWorkerTask();
+            }
+        }
+
+        return null;
     }
 }

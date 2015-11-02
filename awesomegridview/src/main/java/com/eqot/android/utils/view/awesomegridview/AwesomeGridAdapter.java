@@ -1,8 +1,9 @@
 package com.eqot.android.utils.view.awesomegridview;
 
+import android.content.ContentResolver;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,9 +22,10 @@ public class AwesomeGridAdapter extends RecyclerView.Adapter<AwesomeGridAdapter.
     private static final String TAG = "AwesomeGridAdapter";
 
     private ArrayList<Object> mDataset;
-    private View mView;
+    private Resources mResources;
+    private ContentResolver mContentResolver;
 
-    private Bitmap mPlaceHolderBitmap;
+    private static Bitmap sPlaceHolderBitmap = null;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView mImageView;
@@ -39,70 +41,32 @@ public class AwesomeGridAdapter extends RecyclerView.Adapter<AwesomeGridAdapter.
 
     public AwesomeGridAdapter(ArrayList<Object> dataset, View view) {
         mDataset = dataset;
-        mView = view;
+        mResources = view.getResources();
+        mContentResolver = view.getContext().getContentResolver();
 
-        mPlaceHolderBitmap = BitmapFactory.decodeResource(
-                mView.getResources(), R.drawable.ic_launcher);
+        if (sPlaceHolderBitmap == null) {
+            sPlaceHolderBitmap = BitmapFactory.decodeResource(mResources, R.drawable.ic_launcher);
+        }
     }
 
     @Override
-    public AwesomeGridAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                        int viewType) {
+    public AwesomeGridAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item, parent, false);
 
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        if (mDataset.get(0) instanceof Integer) {
-            Bitmap bitmap = BitmapFactory.decodeResource(
-                    mView.getResources(), (Integer) mDataset.get(position));
-            holder.mImageView.setImageBitmap(bitmap);
-        } else if (mDataset.get(0) instanceof String) {
-            holder.mTextView.setText(mDataset.get(position).toString());
-        } else {
-            Uri uri = ((Media) mDataset.get(position)).mUri;
+        Uri uri = ((Media) mDataset.get(position)).mUri;
 
-            if (cancelPotentialWork(uri, holder.mImageView)) {
-                final BitmapWorkerTask task = new BitmapWorkerTask(
-                        holder.mImageView, mView.getContext().getContentResolver());
-                final AsyncDrawable drawable =
-                        new AsyncDrawable(mView.getResources(), mPlaceHolderBitmap, task);
-                holder.mImageView.setImageDrawable(drawable);
-                task.execute(uri);
-            }
+        if (AsyncDrawable.cancelPotentialWork(holder.mImageView, uri)) {
+            final BitmapWorkerTask task = new BitmapWorkerTask(holder.mImageView, mContentResolver);
+            final AsyncDrawable drawable = new AsyncDrawable(mResources, sPlaceHolderBitmap, task);
+            holder.mImageView.setImageDrawable(drawable);
+            task.execute(uri);
         }
-    }
-
-    private static boolean cancelPotentialWork(Uri uri, ImageView imageView) {
-        final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
-
-        if (bitmapWorkerTask != null) {
-            final Uri bitmapUri = bitmapWorkerTask.uri;
-
-            if (bitmapUri == null || bitmapUri != uri) {
-                bitmapWorkerTask.cancel(true);
-            } else {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
-        if (imageView != null) {
-            final Drawable drawable = imageView.getDrawable();
-            if (drawable instanceof AsyncDrawable) {
-                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
-                return asyncDrawable.getBitmapWorkerTask();
-            }
-        }
-
-        return null;
     }
 
     @Override
